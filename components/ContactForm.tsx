@@ -1,21 +1,37 @@
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { useEffect } from 'react';
 
 export default function ContactForm() {
+  const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '';
+
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = `https://www.google.com/recaptcha/api.js?render=${siteKey}`;
+    script.async = true;
+    document.body.appendChild(script);
+  }, [siteKey]);
+
   const formik = useFormik({
-    initialValues: {
-      name: '',
-      email: '',
-      message: ''
-    },
+    initialValues: { name: '', email: '', message: '', token: '' },
     validationSchema: Yup.object({
       name: Yup.string().required('Required'),
       email: Yup.string().email('Invalid email address').required('Required'),
-      message: Yup.string().required('Required')
+      message: Yup.string().required('Required'),
     }),
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
-    }
+    onSubmit: async (values) => {
+      const token = await grecaptcha.execute(siteKey, { action: 'submit' });
+      values.token = token;
+
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(values),
+      });
+
+      const data = await res.json();
+      alert(data.message || 'Submitted!');
+    },
   });
 
   return (
