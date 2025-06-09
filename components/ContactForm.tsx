@@ -2,6 +2,8 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useEffect } from 'react';
 
+declare const grecaptcha: any;
+
 export default function ContactForm() {
   const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '';
 

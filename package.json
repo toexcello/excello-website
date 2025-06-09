@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.8",
+    "@types/grecaptcha": "^3.0.9",
     "@types/node": "^22.15.30",
     "autoprefixer": "latest",
     "postcss": "latest",
