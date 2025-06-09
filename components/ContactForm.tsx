@@ -1,0 +1,29 @@
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+
+export default function ContactForm() {
+  const formik = useFormik({
+    initialValues: {
+      name: '',
+      email: '',
+      message: ''
+    },
+    validationSchema: Yup.object({
+      name: Yup.string().required('Required'),
+      email: Yup.string().email('Invalid email address').required('Required'),
+      message: Yup.string().required('Required')
+    }),
+    onSubmit: (values) => {
+      alert(JSON.stringify(values, null, 2));
+    }
+  });
+
+  return (
+    <form onSubmit={formik.handleSubmit} className="space-y-4 max-w-xl mt-6">
+      <input name="name" placeholder="Name" onChange={formik.handleChange} value={formik.values.name} className="w-full p-2 border rounded" />
+      <input name="email" placeholder="Email" onChange={formik.handleChange} value={formik.values.email} className="w-full p-2 border rounded" />
+      <textarea name="message" placeholder="Message" onChange={formik.handleChange} value={formik.values.message} className="w-full p-2 border rounded" />
+      <button type="submit" className="bg-accent text-white px-4 py-2 rounded">Submit</button>
+    </form>
+  );
+}
